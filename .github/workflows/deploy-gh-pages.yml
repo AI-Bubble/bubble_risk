@@ -24,7 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install lightningcss wasm adapter (CI fix)
+        run: npm i lightningcss-wasm --no-save
+
       - name: Build and export
+        env:
+          # Force webpack instead of Turbopack to avoid native lightningcss binding issues
+          NEXT_FORCE_WEBPACK: '1'
+          # Prefer WASM transformer if available
+          CSS_TRANSFORMER_WASM: '1'
         run: npm run export
 
       - name: Deploy to GitHub Pages
